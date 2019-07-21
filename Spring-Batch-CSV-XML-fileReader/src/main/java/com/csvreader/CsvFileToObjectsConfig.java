@@ -34,23 +34,31 @@ public class CsvFileToObjectsConfig {
 
    
     public void setDataSource(DataSource dataSource) {
-    }
-       
+     }
+        
+    // csv file reader
     @Bean
     public FlatFileItemReader<RecordDTO> csvReader(){
         FlatFileItemReader<RecordDTO> reader = new FlatFileItemReader<RecordDTO>();
         reader.setResource(new ClassPathResource("records.csv"));
+        
+    	reader.setLinesToSkip(1); 
+        
         reader.setLineMapper(new DefaultLineMapper<RecordDTO>() {{
             setLineTokenizer(new DelimitedLineTokenizer() {{
                 setNames(new String[] {"reference","accountNumber","description","startBalance","mutation","endBalance"});
             }});
+            
             setFieldSetMapper(new BeanWrapperFieldSetMapper<RecordDTO>() {{
                 setTargetType(RecordDTO.class);
             }});
         }});
+        
+        
         return reader;
     }
     
+    // xml file reader
     @Bean  
     public ItemReader<RecordDTO> xmlFileItemReader() {
         StaxEventItemReader<RecordDTO> xmlFileReader = new StaxEventItemReader<>();
@@ -63,17 +71,17 @@ public class CsvFileToObjectsConfig {
     }
     
 	@Bean
-	ItemProcessor<RecordDTO, RecordDTO> csvAnimeProcessor() {
-		return new CsvProcessor();
+	ItemProcessor<RecordDTO, RecordDTO> csvProcessor() {
+		return new FileProcessor();
 	}
 
 	@Bean
 	public Step csvFileToListStep() {
 		return stepBuilderFactory.get("csvFileToListStep")
 				.<RecordDTO, RecordDTO>chunk(1)
-				//.reader(csvReader()) // csv file reader
-				.reader(xmlFileItemReader()) // xml file reader
-				.processor(csvAnimeProcessor())
+				.reader(csvReader()) // csv file reader
+				//.reader(xmlFileItemReader()) // xml file reader
+				.processor(csvProcessor())
 				.build();
 	}
 
