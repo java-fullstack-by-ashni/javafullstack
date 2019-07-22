@@ -16,10 +16,14 @@ public class Utility {
 		else {
 		 tb=ob - mt;
 		}
-		String[] strLenght=totalBalance.split("\\.");
-        if(strLenght.length > 0) {
-         tb=setDecimal(strLenght.length ,tbl);
+		
+		// get length of digit after decimal point of end balance  
+		String[] strDecimalLenght=totalBalance.split("\\.");
+        if(strDecimalLenght.length > 0) {
+    	 String decimalDigits =strDecimalLenght[1];
+         tb=setDecimal(decimalDigits.length(),tb);
         }
+        
 		if(tbl==tb) {
 		  tbe=false;
 		}

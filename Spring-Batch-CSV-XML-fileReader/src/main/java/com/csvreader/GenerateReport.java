@@ -2,13 +2,15 @@ package com.csvreader;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
-import com.itextpdf.text.pdf.PdfDate;
+import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -31,9 +33,11 @@ public class GenerateReport {
 		}
 		
 		errorMap.forEach((k, v) -> {
+	        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+	        Date dt = new Date();
 			table.addCell(k);
 			table.addCell(v);
-			table.addCell(new PdfDate().toString());
+			table.addCell(new Phrase(sdf.format(dt)));
 
 		});
 

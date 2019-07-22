@@ -40,8 +40,15 @@ public class FileProcessor implements ItemProcessor<RecordDTO, RecordDTO> {
        final RecordDTO transformedRecordDTO = new RecordDTO(reference,accountNumber,description,startBalance,mutation,endBalance);
        
        if(recordList.size()==0) {
+    	   log.info("check End Balance:==>");
+           tb=Utility.checkTotalBalance(transformedRecordDTO.getStartBalance(),transformedRecordDTO.getMutation(), transformedRecordDTO.getEndBalance());
+           if(tb==true) {
+         	  recordMap.put(transformedRecordDTO.getReference(), "Incorrect End Balance.");
+            }
+           else {
     	   log.info("Converting (" + recordDTO + ") into (" + transformedRecordDTO + ")");
            recordList.add(transformedRecordDTO);
+           }
        }
        
        else {
